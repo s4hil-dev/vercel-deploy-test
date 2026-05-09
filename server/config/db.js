@@ -3,6 +3,10 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
+    if (mongoose.connection.readyState === 1) {
+      return;
+    }
+
     const mongoUri = process.env.MONGO_URI;
     if (!mongoUri) {
       throw new Error("MONGO_URI is not set");
