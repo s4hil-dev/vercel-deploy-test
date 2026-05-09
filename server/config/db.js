@@ -3,11 +3,16 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/notes-rbac");
+    const mongoUri = process.env.MONGO_URI;
+    if (!mongoUri) {
+      throw new Error("MONGO_URI is not set");
+    }
+
+    await mongoose.connect(mongoUri);
     console.log("MongoDB connected");
   } catch (err) {
-    console.error(err);
-    process.exit(1);
+    console.error("MongoDB connection failed:", err.message);
+    throw err;
   }
 };
 
