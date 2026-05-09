@@ -32,11 +32,15 @@ const authSlice = createSlice({
       state.loading = false;
       state.initialized = true;
       state.error = action.payload;
+    },
+    authEnd: (state) => {
+      state.loading = false;
+      state.error = null;
     }
   }
 });
 
-export const { authStart, setUser, clearUser, authFailure } = authSlice.actions;
+export const { authStart, setUser, clearUser, authFailure, authEnd } = authSlice.actions;
 export default authSlice.reducer;
 
 
@@ -49,6 +53,19 @@ export const loginUser = (data) => async (dispatch) => {
     return res.data.user;
   } catch (error) {
     const message = error.response?.data?.msg || "Login failed";
+    dispatch(authFailure(message));
+    throw error;
+  }
+};
+
+export const registerUser = (data) => async (dispatch) => {
+  try {
+    dispatch(authStart());
+    const res = await api.post("/auth/register", data);
+    dispatch(authEnd());
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.msg || "Registration failed";
     dispatch(authFailure(message));
     throw error;
   }

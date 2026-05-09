@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import ProtectedLayout from "./components/ProtectedLayout";
@@ -20,6 +21,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route element={<ProtectedLayout />}>
           <Route path="/" element={<Dashboard />} />

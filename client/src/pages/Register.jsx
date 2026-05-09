@@ -1,35 +1,33 @@
-// pages/Login.jsx
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../features/authSlice";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../features/authSlice";
 
-export default function Login() {
-
-  const navigate = useNavigate()
-
+export default function Register() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector(state => state.auth);
 
   const [form, setForm] = useState({
     email: "",
-    password: ""
+    password: "",
+    role: "user"
   });
+
+  useEffect(() => {
+    if (user) navigate("/");
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    if (user) navigate('/');
-  }, [user, navigate]);
-
   const handleSubmit = async () => {
     try {
-      await dispatch(loginUser(form));
-      navigate('/');
+      await dispatch(registerUser(form));
+      navigate("/login");
     } catch {
-      // Error is stored in Redux and shown below the button.
+      // Error is already shown from Redux state.
     }
   };
 
@@ -47,18 +45,18 @@ export default function Login() {
                   Private notebook
                 </p>
                 <h1 className="mt-8 max-w-md text-5xl font-semibold leading-tight">
-                  A calm place for precise thoughts.
+                  Create your quiet workspace.
                 </h1>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="border border-stone-600/70 bg-stone-800/50 p-5">
-                  <p className="text-sm text-stone-400">Access</p>
-                  <p className="mt-2 text-2xl font-semibold">Protected</p>
+                  <p className="text-sm text-stone-400">Onboarding</p>
+                  <p className="mt-2 text-2xl font-semibold">Fast</p>
                 </div>
                 <div className="border border-stone-600/70 bg-stone-800/50 p-5">
-                  <p className="text-sm text-stone-400">Roles</p>
-                  <p className="mt-2 text-2xl font-semibold">Curated</p>
+                  <p className="text-sm text-stone-400">Account</p>
+                  <p className="mt-2 text-2xl font-semibold">Secure</p>
                 </div>
               </div>
             </div>
@@ -67,13 +65,13 @@ export default function Login() {
           <section className="flex items-center justify-center px-6 py-10 sm:px-12">
             <div className="w-full max-w-sm">
               <p className="text-xs font-medium uppercase tracking-[0.28em] text-stone-500">
-                Welcome back
+                New here
               </p>
               <h2 className="mt-3 text-3xl font-semibold text-stone-950">
-                Sign in
+                Create account
               </h2>
               <p className="mt-3 text-sm leading-6 text-stone-600">
-                Enter your credentials to continue into your notes workspace.
+                Register with your email and password to start writing notes.
               </p>
 
               <div className="mt-8 space-y-4">
@@ -92,12 +90,22 @@ export default function Login() {
                   className="w-full border border-stone-300 bg-white px-4 py-3 text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-stone-700 focus:ring-4 focus:ring-stone-300/40"
                 />
 
+                <select
+                  name="role"
+                  value={form.role}
+                  onChange={handleChange}
+                  className="w-full border border-stone-300 bg-white px-4 py-3 text-stone-900 outline-none transition focus:border-stone-700 focus:ring-4 focus:ring-stone-300/40"
+                >
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
                   className="w-full bg-stone-950 px-4 py-3 font-medium text-stone-50 shadow-lg shadow-stone-300/60 transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-400"
                 >
-                  {loading ? "Logging in..." : "Login"}
+                  {loading ? "Creating account..." : "Register"}
                 </button>
               </div>
 
@@ -108,9 +116,9 @@ export default function Login() {
               )}
 
               <p className="mt-6 text-sm text-stone-600">
-                New user?{" "}
-                <Link to="/register" className="font-medium text-stone-900 underline underline-offset-4">
-                  Create an account
+                Already have an account?{" "}
+                <Link to="/login" className="font-medium text-stone-900 underline underline-offset-4">
+                  Sign in
                 </Link>
               </p>
             </div>
