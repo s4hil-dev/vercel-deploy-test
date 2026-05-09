@@ -1,7 +1,7 @@
 import app from "./app.js";
 import connectDB from "./config/db.js";
+import 'dotenv/config';
 
-dotenv.config();
 await connectDB();
 
 const PORT =  5000;
